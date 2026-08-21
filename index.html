@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>情绪频率测试 · 找回你的内在频率</title>
+<meta name="description" content="跟随直觉，找到契合你当下情绪的专属频率密钥。" />
+<meta property="og:title" content="情绪频率测试 · 找回你的内在频率" />
+<meta property="og:description" content="跟随直觉，找到契合你当下情绪的专属频率密钥。" />
+<meta property="og:image" content="./share.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#070614;
+    --bg-1:#140a2e;
+    --bg-2:#0c1730;
+    --ink:#f3edff;
+    --ink-soft:rgba(243,237,255,.66);
+    --ink-faint:rgba(243,237,255,.40);
+    --glass:rgba(255,255,255,.06);
+    --glass-line:rgba(255,255,255,.14);
+    --moon:#8ab4ff;   /* 静水·月相 */
+    --sun:#ff9d76;    /* 焰心·暖阳 */
+    --seed:#8fe6b0;   /* 翠羽·生长 */
+    --star:#c79bff;   /* 星砂·灵性 */
+    --accent:var(--star);
+    --serif:"Noto Serif SC","Songti SC","STSong",serif;
+    --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 80% -10%, rgba(199,155,255,.18), transparent 60%),
+      radial-gradient(120% 90% at -10% 110%, rgba(138,180,255,.16), transparent 55%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-0) 45%, var(--bg-2));
+    overflow:hidden;
+    letter-spacing:.02em;
+  }
+  #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;}
+  .app{
+    position:relative;z-index:1;
+    height:100%;
+    display:flex;align-items:center;justify-content:center;
+    padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));
+  }
+  .stage{
+    width:100%;max-width:480px;height:100%;max-height:860px;
+    position:relative;
+  }
+  .screen{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    opacity:0;visibility:hidden;transform:translateY(14px);
+    transition:opacity .5s ease, transform .5s ease, visibility .5s;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .screen::-webkit-scrollbar{display:none;}
+  .screen.active{opacity:1;visibility:visible;transform:none;}
+
+  /* ---------- 封面（Annova 风格） ---------- */
+  #cover{justify-content:flex-start;padding-top:0;overflow:hidden;}
+  #cover::before{content:"";position:absolute;inset:0;z-index:-1;
+    background:#16324a;
+    background-image:url('./cover.jpg');background-size:100% auto;background-position:center top;background-repeat:no-repeat;background-color:#16324a;}
+  .cv-inner{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;
+    padding-top:min(72vh,580px);padding-bottom:max(24px,env(safe-area-inset-bottom));}
+
+  /* ---------- 通用按钮 ---------- */
+  .btn{
+    appearance:none;border:none;cursor:pointer;
+    font-family:var(--sans);font-size:15px;font-weight:500;
+    color:#1a0e2e;background:linear-gradient(135deg,#f4e9ff,#cdb6ff);
+    padding:15px 38px;border-radius:999px;
+    box-shadow:0 10px 34px rgba(199,155,255,.35);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn:active{transform:scale(.96);box-shadow:0 6px 20px rgba(199,155,255,.3);}
+  .btn-ghost{
+    background:transparent;color:var(--ink-soft);
+    border:1px solid var(--glass-line);box-shadow:none;
+  }
+  .btn-ghost:active{transform:scale(.96);}
+
+  /* ---------- 题目 ---------- */
+  #quiz{justify-content:flex-start;padding-top:24px;}
+  .q-top{display:flex;flex-direction:column;gap:14px;margin-bottom:26px;}
+  .progress-wrap{height:4px;border-radius:99px;background:var(--glass);overflow:hidden;}
+  .progress-bar{height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--moon),var(--star));
+    transition:width .45s cubic-bezier(.4,0,.2,1);}
+  .q-count{font-size:12px;letter-spacing:.2em;color:var(--ink-faint);}
+  .q-title{
+    font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.7;margin:0;
+  }
+  .q-hint{font-size:13px;color:var(--ink-faint);margin:2px 0 0;}
+  .options{display:flex;flex-direction:column;gap:13px;margin-top:6px;}
+  .option{
+    text-align:left;cursor:pointer;
+    background:var(--glass);border:1px solid var(--glass-line);
+    border-radius:18px;padding:18px 18px;
+    display:flex;align-items:center;gap:14px;
+    color:var(--ink);font-size:15.5px;line-height:1.5;
+    transition:transform .18s ease,border-color .25s ease,background .25s ease;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  }
+  .option .dot{
+    flex:none;width:30px;height:30px;border-radius:50%;
+    display:grid;place-items:center;font-size:14px;font-family:var(--serif);
+    background:rgba(255,255,255,.08);border:1px solid var(--glass-line);
+    transition:transform .2s ease,background .25s ease;
+  }
+  .option:active{transform:scale(.985);}
+  .option.sel{border-color:var(--accent);background:rgba(255,255,255,.1);}
+  .option.sel .dot{background:var(--accent);color:#160a2b;transform:scale(1.05);}
+
+  /* ---------- 计算中 ---------- */
+  #loading{justify-content:center;align-items:center;gap:30px;text-align:center;}
+  .ring{
+    width:96px;height:96px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.1);
+    border-top-color:var(--star);border-right-color:var(--moon);
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{font-family:var(--serif);font-size:18px;color:var(--ink-soft);min-height:1.6em;}
+  .loading-sub{font-size:13px;color:var(--ink-faint);max-width:260px;line-height:1.9;}
+
+  /* ---------- 结果 ---------- */
+  #result{justify-content:flex-start;padding-top:26px;text-align:center;}
+  .res-eyebrow{font-size:12px;letter-spacing:.4em;color:var(--accent);text-transform:uppercase;}
+  .res-name{
+    font-family:var(--serif);font-weight:600;font-size:28px;line-height:1.5;margin:10px 0 4px;
+  }
+  .res-en{font-size:12px;letter-spacing:.32em;color:var(--ink-faint);text-transform:uppercase;}
+  .res-orb{
+    width:118px;height:118px;border-radius:50%;margin:22px auto 18px;
+    background:radial-gradient(circle at 35% 30%, #fff, var(--accent) 55%, transparent 78%);
+    box-shadow:0 0 50px var(--accent), inset 0 0 30px rgba(255,255,255,.5);
+    animation:breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.92;}50%{transform:scale(1.06);opacity:1;}}
+  .res-key{
+    font-family:var(--serif);font-size:17px;color:var(--ink);
+    border-top:1px solid var(--glass-line);border-bottom:1px solid var(--glass-line);
+    padding:14px 0;margin:6px auto 20px;max-width:330px;line-height:1.8;
+  }
+  .res-desc{font-size:14.5px;line-height:2;color:var(--ink-soft);text-align:left;margin:0 4px 22px;}
+  .res-tips{text-align:left;display:flex;flex-direction:column;gap:12px;margin:0 2px 26px;}
+  .tip{
+    display:flex;gap:12px;align-items:flex-start;
+    background:var(--glass);border:1px solid var(--glass-line);
+    border-radius:14px;padding:14px 16px;
+  }
+  .tip b{font-weight:500;color:var(--ink);}
+  .tip p{margin:4px 0 0;font-size:13.5px;line-height:1.7;color:var(--ink-soft);}
+  .tip .num{
+    flex:none;width:24px;height:24px;border-radius:50%;
+    display:grid;place-items:center;font-size:12px;font-family:var(--serif);
+    background:var(--accent);color:#160a2b;
+  }
+  .res-actions{display:flex;flex-direction:column;gap:11px;margin:4px 0 18px;}
+  .res-actions .row{display:flex;gap:11px;}
+  .res-actions .row .btn{flex:1;}
+  .brand-foot{font-size:11px;letter-spacing:.2em;color:var(--ink-faint);margin-top:6px;}
+  .brand-foot b{color:var(--ink-soft);font-weight:500;}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:34px;transform:translateX(-50%) translateY(20px);
+    background:rgba(20,12,40,.92);border:1px solid var(--glass-line);
+    color:var(--ink);font-size:13.5px;padding:11px 20px;border-radius:99px;
+    opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:50;
+    backdrop-filter:blur(8px);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="app">
+  <div class="stage">
+
+    <!-- 封面 -->
+    <section id="cover" class="screen active">
+      <div class="cv-inner">
+        <button class="btn" id="startBtn">開始測試</button>
+      </div>
+    </section>
+
+    <!-- 题目 -->
+    <section id="quiz" class="screen">
+      <div class="q-top">
+        <div class="progress-wrap"><div class="progress-bar" id="bar"></div></div>
+        <div class="q-count" id="qCount">01 / 08</div>
+        <h2 class="q-title" id="qTitle"></h2>
+        <p class="q-hint" id="qHint">凭第一直觉，选最打动你的那个。</p>
+      </div>
+      <div class="options" id="options"></div>
+    </section>
+
+    <!-- 计算中 -->
+    <section id="loading" class="screen">
+      <div class="ring"></div>
+      <div class="loading-text" id="loadText">正在校准你的频率…</div>
+      <div class="loading-sub" id="loadSub">请稍候，宇宙正在为你调取专属密钥。</div>
+    </section>
+
+    <!-- 结果 -->
+    <section id="result" class="screen">
+      <div class="res-eyebrow">YOUR FREQUENCY</div>
+      <div class="res-name" id="resName"></div>
+      <div class="res-en" id="resEn"></div>
+      <div class="res-orb" id="resOrb"></div>
+      <div class="res-key" id="resKey"></div>
+      <p class="res-desc" id="resDesc"></p>
+      <div class="res-tips" id="resTips"></div>
+      <div class="res-actions">
+        <div class="row">
+          <button class="btn" id="shareBtn">复制我的频率</button>
+          <button class="btn btn-ghost" id="againBtn">重新测试</button>
+        </div>
+        <button class="btn btn-ghost" id="brandBtn">关注我们 · 解锁疗愈指南</button>
+      </div>
+      <div class="brand-foot">由 <b>YOUR BRAND</b> 为你呈献</div>
+    </section>
+
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ 可自定义内容区 ============ */
+const QUESTIONS = [
+  { q:"此刻，你最想被怎样的画面拥抱？", hint:"凭第一直觉，选最打动你的那个。",
+    options:[
+      {t:"静谧湖面上的月色", k:"moon"},
+      {t:"黄昏里跳动的篝火", k:"sun"},
+      {t:"雨后新绿的森林", k:"seed"},
+      {t:"夜空中流转的星云", k:"star"},
+    ]},
+  { q:"如果给你的情绪配一种天气，是？", hint:"不要思考，凭感觉。",
+    options:[
+      {t:"薄雾笼罩的清晨", k:"moon"},
+      {t:"晴朗热烈的烈日", k:"sun"},
+      {t:"雨后微凉的轻风", k:"seed"},
+      {t:"星河低语的夜晚", k:"star"},
+    ]},
+  { q:"哪种声音最能安抚此刻的你？", hint:"哪个让你松一口气？",
+    options:[
+      {t:"雨点轻打窗棂", k:"moon"},
+      {t:"篝火噼啪作响", k:"sun"},
+      {t:"溪流与鸟鸣", k:"seed"},
+      {t:"风铃随风轻响", k:"star"},
+    ]},
+  { q:"你当下最渴望被给予什么？", hint:"诚实面对自己。",
+    options:[
+      {t:"一次深度的休息", k:"moon"},
+      {t:"重新出发的勇气", k:"sun"},
+      {t:"被理解与陪伴", k:"seed"},
+      {t:"灵感的火花", k:"star"},
+    ]},
+  { q:"凭本能，选一种颜色靠近你。", hint:"不要犹豫。",
+    options:[
+      {t:"深海般的蓝", k:"moon"},
+      {t:"暖阳般的橙", k:"sun"},
+      {t:"生机般的绿", k:"seed"},
+      {t:"星河般的紫", k:"star"},
+    ]},
+  { q:"理想的周末，你更想…", hint:"想象一下就懂了。",
+    options:[
+      {t:"独自发呆、看书、放空", k:"moon"},
+      {t:"去尝试一件新鲜事", k:"sun"},
+      {t:"和在意的人温柔相聚", k:"seed"},
+      {t:"创作、冥想、做白日梦", k:"star"},
+    ]},
+  { q:"当压力来袭，你靠什么回血？", hint:"你最自然的方式。",
+    options:[
+      {t:"安静地独处一会儿", k:"moon"},
+      {t:"动起来，用行动释放", k:"sun"},
+      {t:"找人倾诉、抱抱", k:"seed"},
+      {t:"独处冥想或搞艺术", k:"star"},
+    ]},
+  { q:"你内在最想被看见的部分是？", hint:"那个真实的你。",
+    options:[
+      {t:"脆弱而真实的自己", k:"moon"},
+      {t:"热烈而勇敢的自己", k:"sun"},
+      {t:"温柔而善感的自己", k:"seed"},
+      {t:"神秘而有深度的自己", k:"star"},
+    ]},
+];
+
+const RESULTS = {
+  moon:{ name:"静水流深 · 月相频率", en:"MOONLIGHT FREQUENCY",
+    key:"你的密钥是「沉静」——允许自己停泊，便已足够。",
+    desc:"你正处在一个需要向内安放的频段。外面的喧嚣太多，而你最稀缺的，是一段不被打扰的、属于自己的安静。不必着急回应世界，先回应你自己。",
+    tips:[
+      {t:"给自己留白", p:"每天留出 15 分钟，不看手机，只是呼吸或发呆。"},
+      {t:"降低刺激", p:"睡前一小时调到暖光，听雨声或白噪音，让神经松下来。"},
+      {t:"写下来", p:"把盘旋的念头写进纸里，让大脑相信：它们已被看见。"},
+    ], color:"var(--moon)"},
+  sun:{ name:"焰心微光 · 暖阳频率", en:"SUNLIT FREQUENCY",
+    key:"你的密钥是「行动」——动起来，光就回来了。",
+    desc:"你此刻的能量，需要被点燃而非被安抚。也许你有些倦怠，但那不是熄灭，只是火候不够。一点小小的行动，就会重新把热度和勇气还给你。",
+    tips:[
+      {t:"做一件小事", p:"列一个 3 项清单，完成即停，用成就感点燃状态。"},
+      {t:"动起来", p:"快走、跳舞、晒太阳 10 分钟，身体会替你找回节奏。"},
+      {t:"说出渴望", p:"把想做的事讲给一个人听，意愿会因表达而变真。"},
+    ], color:"var(--sun)"},
+  seed:{ name:"翠羽新生 · 生长频率", en:"GROWTH FREQUENCY",
+    key:"你的密钥是「连接」——被好好爱过，你才有力气生长。",
+    desc:"你现在的频率，渴望温柔的关系与真实的连接。你不需要独自扛着所有情绪，允许自己被接住、被陪伴，是你此刻最该给自己的允许。",
+    tips:[
+      {t:"主动靠近", p:"给一个你在意的人发消息，或约一次轻松的见面。"},
+      {t:"表达需要", p:"试着说“我今天有点需要你陪”，关系会因坦诚更近。"},
+      {t:"照料小事", p:"养一盆植物、做一顿饭，用具体的照顾喂养自己。"},
+    ], color:"var(--seed)"},
+  star:{ name:"星砂织梦 · 灵性频率", en:"STARLIT FREQUENCY",
+    key:"你的密钥是「灵感」——去创造，宇宙会接住你的想象。",
+    desc:"你正运行在一个辽阔而有深度的频段。你不满足于表面的热闹，你在寻找意义、美与超越。别让日常把你的灵感磨平，去创作，去做梦，去相信直觉。",
+    tips:[
+      {t:"留出发散", p:"每天留 20 分钟做没有目的的事：听歌、画画、发呆。"},
+      {t:"记录闪念", p:"灵感一来就记在手机里，它们是你的星图。"},
+      {t:"靠近美", p:"看一场展、一部电影或一片夜空，让感官重新苏醒。"},
+    ], color:"var(--star)"},
+};
+
+const BRAND = "Annova";          // 底部品牌名
+const SHARE_SUFFIX = " · 来做我的同款情绪频率测试 →"; // 分享后缀
+/* ======================================== */
+
+const screens = {
+  cover: document.getElementById('cover'),
+  quiz: document.getElementById('quiz'),
+  loading: document.getElementById('loading'),
+  result: document.getElementById('result'),
+};
+function show(name){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[name].classList.add('active');
+  screens[name].scrollTop = 0;
+}
+
+let step = 0;
+const scores = {moon:0, sun:0, seed:0, star:0};
+const qTitle=document.getElementById('qTitle'),
+      qCount=document.getElementById('qCount'),
+      qHint=document.getElementById('qHint'),
+      optionsBox=document.getElementById('options'),
+      bar=document.getElementById('bar'),
+      toast=document.getElementById('toast');
+
+function renderQuestion(){
+  const item = QUESTIONS[step];
+  qTitle.textContent = item.q;
+  qHint.textContent = item.hint || "";
+  qCount.textContent = String(step+1).padStart(2,'0') + " / " + String(QUESTIONS.length).padStart(2,'0');
+  bar.style.width = ((step)/QUESTIONS.length*100) + "%";
+  optionsBox.innerHTML = "";
+  const letters=["A","B","C","D"];
+  item.options.forEach((opt,i)=>{
+    const el=document.createElement('button');
+    el.className="option";
+    el.innerHTML = `<span class="dot">${letters[i]}</span><span>${opt.t}</span>`;
+    el.onclick=()=>choose(opt.k, el);
+    optionsBox.appendChild(el);
+  });
+}
+
+function choose(key, el){
+  el.classList.add('sel');
+  scores[key]++;
+  bar.style.width = ((step+1)/QUESTIONS.length*100) + "%";
+  setTimeout(()=>{
+    step++;
+    if(step < QUESTIONS.length){ renderQuestion(); }
+    else { compute(); }
+  }, 340);
+}
+
+const loadTexts=[
+  "正在校准你的频率…",
+  "读取你的直觉信号…",
+  "为你调取专属密钥…",
+];
+function compute(){
+  show('loading');
+  let i=0;
+  const lt=document.getElementById('loadText');
+  const iv=setInterval(()=>{ i=(i+1)%loadTexts.length; lt.textContent=loadTexts[i]; }, 700);
+  setTimeout(()=>{
+    clearInterval(iv);
+    // 取最高分维度（平局按 moon,sun,seed,star 优先）
+    let best='moon', max=-1;
+    ['moon','sun','seed','star'].forEach(k=>{ if(scores[k]>max){max=scores[k];best=k;} });
+    showResult(RESULTS[best], best);
+  }, 1900);
+}
+
+function showResult(r, key){
+  document.documentElement.style.setProperty('--accent', r.color);
+  document.getElementById('resName').textContent = r.name;
+  document.getElementById('resEn').textContent = r.en;
+  document.getElementById('resKey').textContent = r.key;
+  document.getElementById('resDesc').textContent = r.desc;
+  const orb=document.getElementById('resOrb');
+  orb.style.background = `radial-gradient(circle at 35% 30%, #fff, ${r.color} 55%, transparent 78%)`;
+  orb.style.boxShadow = `0 0 50px ${r.color}, inset 0 0 30px rgba(255,255,255,.5)`;
+  const tips=document.getElementById('resTips');
+  tips.innerHTML="";
+  r.tips.forEach((tp,i)=>{
+    const d=document.createElement('div');
+    d.className="tip";
+    d.innerHTML=`<span class="num">${i+1}</span><div><b>${tp.t}</b><p>${tp.p}</p></div>`;
+    tips.appendChild(d);
+  });
+  document.querySelector('.brand-foot').innerHTML = "由 <b>"+BRAND+"</b> 为你呈献";
+  show('result');
+}
+
+function toastMsg(m){
+  toast.textContent=m; toast.classList.add('show');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+
+document.getElementById('startBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
+document.getElementById('againBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
+document.getElementById('shareBtn').onclick=()=>{
+  const txt = `${document.getElementById('resName').textContent}\n${document.getElementById('resKey').textContent}${SHARE_SUFFIX}`;
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toastMsg("已复制，去分享吧 ✦")).catch(()=>toastMsg("复制失败，请手动选择")); }
+  else toastMsg("已生成结果，长按可复制");
+};
+document.getElementById('brandBtn').onclick=()=>toastMsg("已记录你的关注意向 ✦");
+
+/* ============ 星空背景 ============ */
+const cv=document.getElementById('stars'), ctx=cv.getContext('2d');
+let W,H,stars=[];
+function resize(){ W=cv.width=innerWidth*devicePixelRatio; H=cv.height=innerHeight*devicePixelRatio; cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px';
+  const n=Math.min(160, Math.floor(innerWidth*innerHeight/9000));
+  stars=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4*devicePixelRatio+.3,t:Math.random()*Math.PI*2,s:Math.random()*.012+.004}));
+}
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(const p of stars){
+    p.t+=p.s; const a=.4+Math.sin(p.t)*.4;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+addEventListener('resize',resize); resize(); draw();
+</script>
+</body>
+</html>
