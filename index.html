@@ -76,6 +76,32 @@
   .cv-inner{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;
     padding-top:min(72vh,580px);padding-bottom:max(24px,env(safe-area-inset-bottom));}
 
+  /* ---------- 介绍页（封面后、题目前） ---------- */
+  #intro{justify-content:flex-start;overflow:hidden;
+    background:#f5f0e8;color:#4a453d;}
+  .intro-body{padding:36px 28px 20px;text-align:center;}
+  .intro-title{
+    font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.55;
+    color:#6b6560;margin:0 0 24px;letter-spacing:.04em;
+  }
+  .intro-poem{font-family:var(--serif);font-weight:300;font-size:15.5px;
+    color:#5a564e;line-height:2.15;margin:0 auto 22px;max-width:320px;}
+  .intro-poem span{display:block;}
+  .intro-poem .dash{display:block;text-align:center;margin:10px 0;color:#9a948a;font-size:14px;}
+  .intro-poem .brand-name{font-size:19px;color:#3d3832;margin:12px 0 6px;}
+  .intro-cta{margin:18px auto 0;}
+  .btn-intro{
+    appearance:none;border:none;cursor:pointer;
+    font-family:var(--sans);font-size:16px;font-weight:500;
+    color:#6b6560;background:#e8e2d6;
+    padding:15px 44px;border-radius:999px;
+    box-shadow:0 4px 16px rgba(0,0,0,.08);
+    transition:transform .2s ease;
+  }
+  .btn-intro:active{transform:scale(.96);}
+  .intro-line{position:absolute;right:16px;top:40px;bottom:30px;width:1px;
+    background:linear-gradient(to bottom,transparent,#c8baa8,transparent);opacity:.5;}
+
   /* ---------- 通用按钮 ---------- */
   .btn{
     appearance:none;border:none;cursor:pointer;
@@ -194,8 +220,30 @@
     <!-- 封面 -->
     <section id="cover" class="screen active">
       <div class="cv-inner">
-        <button class="btn" id="startBtn">開始測試</button>
+        <button class="btn" id="startBtn">進入</button>
       </div>
+    </section>
+
+    <!-- 介绍页 -->
+    <section id="intro" class="screen">
+      <div class="intro-body">
+        <h2 class="intro-title">Annova宇宙情緒療癒<br>| 找回你的內在頻率 |</h2>
+        <div class="intro-poem">
+          <span>當生活的噪點淹沒感知，</span>
+          <span>當情緒的潮汐忽高忽低，</span>
+          <span>我們總在尋找一種與自己和解的方式。</span>
+          <span class="dash">－</span>
+          <span class="brand-name">Annova</span>
+          <span>以宇宙為幕，以情緒為引，</span>
+          <span>邀你踏上一場身心靈的療癒之旅。</span>
+          <span>你將找到那把解鎖內心平靜、</span>
+          <span>契合你當下情緒的專屬密鑰。</span>
+          <span>無需刻意解讀，</span>
+          <span>請跟隨直覺選擇。</span>
+        </div>
+        <button class="btn-intro intro-cta" id="exploreBtn">開始探索</button>
+      </div>
+      <div class="intro-line"></div>
     </section>
 
     <!-- 题目 -->
@@ -341,6 +389,7 @@ const SHARE_SUFFIX = " · 来做我的同款情绪频率测试 →"; // 分享�
 
 const screens = {
   cover: document.getElementById('cover'),
+  intro: document.getElementById('intro'),
   quiz: document.getElementById('quiz'),
   loading: document.getElementById('loading'),
   result: document.getElementById('result'),
@@ -433,7 +482,8 @@ function toastMsg(m){
   clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove('show'),1800);
 }
 
-document.getElementById('startBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
+document.getElementById('startBtn').onclick=()=>show('intro');
+document.getElementById('exploreBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
 document.getElementById('againBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
 document.getElementById('shareBtn').onclick=()=>{
   const txt = `${document.getElementById('resName').textContent}\n${document.getElementById('resKey').textContent}${SHARE_SUFFIX}`;
