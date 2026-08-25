@@ -368,11 +368,9 @@
       </div>
       <div class="res-actions">
         <div class="row">
-          <button class="btn" id="shareBtn">复制我的频率</button>
+          <button class="btn" id="shareBtn">分享我的频率</button>
           <button class="btn btn-ghost" id="againBtn">重新测试</button>
         </div>
-        <a class="btn btn-wechat" id="wechatBtn">金点心理能量站 ⟶</a>
-        <div class="wechat-hint">填写信息，加入金点心理能量站 · 我们微信相连</div>
       </div>
       <div class="brand-foot brand-foot-dark">由 <b>Annova</b> 为你呈献 · annova.com.tw</div>
     </section>
@@ -647,7 +645,6 @@ function showResult(r, key){
   img.src = r.img;
   img.alt = r.name + ' · ' + r.en;
   document.querySelector('.brand-foot-dark').innerHTML = "由 <b>"+BRAND+"</b> 为你呈献 · annova.com.tw";
-  document.getElementById('wechatBtn').onclick = openLeadModal; // 打开信息收集表单
   show('result');
 }
 
@@ -661,8 +658,8 @@ document.getElementById('againBtn').onclick=()=>{ step=0; Object.keys(scores).fo
 document.getElementById('shareBtn').onclick=()=>{
   const r = RESULTS[Object.keys(scores).reduce((a,b)=>scores[a]>=scores[b]?a:b)];
   const txt = `${r.name}\n${r.en}\n${r.key}${SHARE_SUFFIX}`;
-  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toastMsg("已复制，去分享吧 ✦")).catch(()=>toastMsg("复制失败，请手动选择")); }
-  else toastMsg("已生成结果，长按可复制");
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(()=>toastMsg("已复制，去分享吧 ✦")).catch(()=>toastMsg("分享失败，请手动选择")); }
+  else toastMsg("已生成结果，长按可分享");
 };
 
 /* ============ 信息收集表单（金点心理能量站） ============ */
@@ -677,7 +674,6 @@ function closeLeadModal(){
   leadMask.classList.remove('show'); document.body.style.overflow='';
   leadForm.reset(); leadDone.hidden=true; leadForm.hidden=false;
 }
-document.getElementById('wechatBtn').onclick = openLeadModal;
 document.getElementById('leadClose').onclick = closeLeadModal;
 document.getElementById('leadDoneClose').onclick = closeLeadModal;
 leadMask.addEventListener('click', e=>{ if(e.target===leadMask) closeLeadModal(); });
