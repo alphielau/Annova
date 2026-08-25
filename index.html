@@ -68,16 +68,12 @@
   .screen::-webkit-scrollbar{display:none;}
   .screen.active{opacity:1;visibility:visible;transform:none;}
 
-  /* ---------- 封面（Annova 风格） ---------- */
-  #cover{justify-content:flex-start;padding-top:0;overflow:hidden;background:#16324a;}
-  #cover::before{content:"";position:absolute;inset:0;z-index:-1;
-    background:#16324a;background-size:100% auto;background-position:center top;background-repeat:no-repeat;background-color:#16324a;}
-  .cv-inner{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;
-    padding-top:min(72vh,580px);padding-bottom:max(24px,env(safe-area-inset-bottom));}
-
-  /* ---------- 介绍页（封面后、题目前） ---------- */
-  #intro{justify-content:flex-start;overflow-y:auto;
-    background:#f5f0e8;color:#4a453d;}
+  /* ---------- 首页（封面+介绍，可下拉滚动） ---------- */
+  #homepage{justify-content:flex-start;overflow-y:auto;overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;}
+  .hp-cover{position:relative;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
+    align-items:center;justify-content:flex-start;background:#16324a;overflow:hidden;}
+  .hp-intro{background:#f5f0e8;color:#4a453d;position:relative;}
   .intro-body{padding:36px 28px 20px;text-align:center;}
   .intro-title{
     font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.55;
@@ -98,8 +94,15 @@
     transition:transform .2s ease;
   }
   .btn-intro:active{transform:scale(.96);}
-  .intro-line{position:absolute;right:16px;top:40px;bottom:30px;width:1px;
-    background:linear-gradient(to bottom,transparent,#c8baa8,transparent);opacity:.5;}
+  .intro-line{display:none;}
+
+  /* ---------- 下滑提示 ---------- */
+  .scroll-hint{position:absolute;bottom:max(28px,env(safe-area-inset-bottom));
+    left:50%;transform:translateX(-50%);
+    color:rgba(255,255,255,.55);font-size:13px;font-family:var(--sans);
+    letter-spacing:.15em;animation:scrollBounce 2s ease-in-out infinite;
+    pointer-events:none;white-space:nowrap;}
+  @keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
 
   /* ---------- 通用按钮 ---------- */
   .btn{
@@ -284,7 +287,7 @@
   .lead-done .btn{width:100%;}
 
   /* ---------- 封面底图（JS 延迟加载） ---------- */
-  .cover-bg{position:absolute;inset:0;z-index:-1;background-size:cover;background-position:center;opacity:0;transition:opacity .9s ease;}
+  .cover-bg{position:absolute;inset:0;z-index:1;background-size:cover;background-position:center;opacity:0;transition:opacity .9s ease;}
 
   /* ---------- 启动加载遮罩 ---------- */
   #boot{position:fixed;inset:0;z-index:200;background:#0e1f30;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .5s ease;}
@@ -301,41 +304,42 @@
 <div class="app">
   <div class="stage">
 
-    <!-- 封面 -->
-    <section id="cover" class="screen active">
-      <div id="coverBg" class="cover-bg"></div>
-      <div class="cv-inner">
-        <button class="btn" id="startBtn">進入</button>
-      </div>
-    </section>
-
-    <!-- 介绍页 -->
-    <section id="intro" class="screen">
-      <div class="intro-body">
-        <h2 class="intro-title">Annova宇宙情绪疗愈<br>| 找回你的内在频率 |</h2>
-        <div class="intro-poem">
-          <span>当生活的噪点淹没感知，</span>
-          <span>当情绪的潮汐忽高忽低，</span>
-          <span>我们总在寻找一种与自己和解的方式。</span>
-          <span class="dash">－</span>
-          <span class="brand-name">Annova</span>
-          <span>以宇宙为幕，以情绪为引，</span>
-          <span>邀你踏上一场身心灵的疗愈之旅。</span>
-          <span>你将找到那把解锁内心平静、</span>
-          <span>契合你当下情绪的专属密钥。</span>
-          <span>无需刻意解读，</span>
-          <span>请跟随直觉选择。</span>
+    <!-- 首页（封面 + 介绍，可下拉滚动） -->
+    <section id="homepage" class="screen active">
+      <!-- 封面区域 -->
+      <div id="coverArea" class="hp-cover">
+        <div id="coverBg" class="cover-bg"></div>
+        <div class="cv-inner">
+          <div class="scroll-hint">↓ 下滑探索</div>
         </div>
-        <button class="btn-intro intro-cta" id="exploreBtn">开始探索</button>
       </div>
-      <div class="intro-line"></div>
+      <!-- 介绍区域 -->
+      <div class="hp-intro">
+        <div class="intro-body">
+          <h2 class="intro-title">Annova宇宙情绪疗愈<br>| 找回你的内在频率 |</h2>
+          <div class="intro-poem">
+            <span>当生活的噪点淹没感知，</span>
+            <span>当情绪的潮汐忽高忽低，</span>
+            <span>我们总在寻找一种与自己和解的方式。</span>
+            <span class="dash">－</span>
+            <span class="brand-name">Annova</span>
+            <span>以宇宙为幕，以情绪为引，</span>
+            <span>邀你踏上一场身心灵的疗愈之旅。</span>
+            <span>你将找到那把解锁内心平静、</span>
+            <span>契合你当下情绪的专属密钥。</span>
+            <span>无需刻意解读，</span>
+            <span>请跟随直觉选择。</span>
+          </div>
+          <button class="btn-intro intro-cta" id="exploreBtn">开始探索</button>
+        </div>
+      </div>
     </section>
 
     <!-- 题目 -->
     <section id="quiz" class="screen">
       <div class="q-top">
         <div class="progress-wrap"><div class="progress-bar" id="bar"></div></div>
-        <div class="q-count" id="qCount">01 / 08</div>
+        <div class="q-count" id="qCount">01 / 07</div>
         <h2 class="q-title" id="qTitle"></h2>
         <p class="q-hint" id="qHint">凭第一直觉，选最打动你的那个。</p>
       </div>
@@ -434,61 +438,54 @@
 <script>
 /* ============ 可自定义内容区 ============ */
 const QUESTIONS = [
-  { q:"此刻，你最想被怎样的画面拥抱？", hint:"凭第一直觉，选最打动你的那个。",
+  { q:"| 混亂的起點 |", hint:"當你試圖解讀宇宙傳來的訊息，你最先聽見的是——",
     options:[
-      {t:"静谧湖面上的月色", k:"moon"},
-      {t:"被稳稳托住的港湾", k:"sun"},
-      {t:"雨后新绿的森林", k:"seed"},
-      {t:"翻涌不停的浪", k:"star"},
+      {t:"像無數頻率交錯的噪音，讓人難以專注。", k:"seed"},
+      {t:"一種低頻的脈動，隱約卻揮之不去。", k:"sun"},
+      {t:"急促而清晰的警報聲，催促你馬上行動。", k:"star"},
+      {t:"一段似曾相識的旋律，帶著一點舊日的哀傷。", k:"moon"},
     ]},
-  { q:"如果给你的情绪配一种天气，是？", hint:"不要思考，凭感觉。",
+  { q:"| 內在的狀態顯化 |", hint:"當你望向守護內心的那輪月亮，它此刻呈現什麼姿態？",
     options:[
-      {t:"薄雾笼罩的清晨", k:"moon"},
-      {t:"忽明忽暗的阴天", k:"sun"},
-      {t:"雨后微凉的轻风", k:"seed"},
-      {t:"闷热躁动的雷阵雨", k:"star"},
+      {t:"被流雲撕裂的碎影，光芒忽明忽暗。", k:"star"},
+      {t:"躲在厚重雲層後，只露出一絲不安的光。", k:"sun"},
+      {t:"倒映在翻湧海面，波動而無法平靜。", k:"seed"},
+      {t:"帶著淡紫色的光暈，美麗卻脆弱。", k:"moon"},
     ]},
-  { q:"哪种声音最能安抚此刻的你？", hint:"哪个让你松一口气？",
+  { q:"| 真正的渴望 |", hint:"如果木星願意賜予你一種力量，你最想獲得的是——",
     options:[
-      {t:"雨点轻打窗棂", k:"moon"},
-      {t:"有人轻声说「你没问题」", k:"sun"},
-      {t:"溪流与鸟鸣", k:"seed"},
-      {t:"时钟滴答的催促", k:"star"},
+      {t:"讓世界安靜下來的能力。", k:"moon"},
+      {t:"在失重中重新踩穩地面的真實感。", k:"sun"},
+      {t:"讓時間暫停，好好地睡一場覺。", k:"star"},
+      {t:"一束能溫柔包覆傷口的光。", k:"seed"},
     ]},
-  { q:"你当下最渴望被给予什么？", hint:"诚实面对自己。",
+  { q:"| 現實困境 |", hint:"當土星象徵的責任與現實壓在你身上，你最常有的感覺是——",
     options:[
-      {t:"一次深度的休息", k:"moon"},
-      {t:"一份确定的安心", k:"sun"},
-      {t:"被理解与陪伴", k:"seed"},
-      {t:"让脑子先停下来", k:"star"},
+      {t:"像被關在堆滿雜物的房間，越整理越混亂。", k:"seed"},
+      {t:"像在濃霧中前行，努力卻看不見方向。", k:"sun"},
+      {t:"像一直在奔跑，卻找不到可以停下的時刻。", k:"star"},
+      {t:"像困在築起的高牆，不知該如何原諒過去。", k:"moon"},
     ]},
-  { q:"凭本能，选一种颜色靠近你。", hint:"不要犹豫。",
+  { q:"| 靈魂核心色彩 |", hint:"如果此刻可以為你的內在注入一種能量，你最想擁抱哪種色彩？",
     options:[
-      {t:"深海般的蓝", k:"moon"},
-      {t:"温润安心的米色", k:"sun"},
-      {t:"生机般的绿", k:"seed"},
-      {t:"刺眼跳脱的亮红", k:"star"},
+      {t:"讓思緒歸零的冰晶白。", k:"moon"},
+      {t:"給自己力量的礦石黑。", k:"sun"},
+      {t:"撫平焦慮與緊繃的湖水藍。", k:"star"},
+      {t:"重新感受被愛的玫瑰金。", k:"seed"},
     ]},
-  { q:"理想的周末，你更想…", hint:"想象一下就懂了。",
+  { q:"| 出口與療癒終點 |", hint:"當你穿梭過一片混亂與消耗的能量星層，你真正想抵達的地方是——",
     options:[
-      {t:"独自发呆、看书、放空", k:"moon"},
-      {t:"待在熟悉安全的角落", k:"sun"},
-      {t:"和在意的人温柔相聚", k:"seed"},
-      {t:"行程排满停不下来", k:"star"},
+      {t:"一個安靜到只聽得見呼吸的空間。", k:"moon"},
+      {t:"一個重新感受到「腳踩在地上」的避風港。", k:"sun"},
+      {t:"一片能慢慢釋放壓力的夜色森林。", k:"star"},
+      {t:"一個可以卸下防備、好好被抱住的地方。", k:"seed"},
     ]},
-  { q:"当压力来袭，你靠什么回血？", hint:"你最自然的方式。",
+  { q:"| 找到你的內在鑰匙 |", hint:"穿越混亂、霧氣與星雲之後，終於找到了自己的那把「內在鑰匙」。握在掌心時，它的觸感更像是——",
     options:[
-      {t:"安静地独处一会儿", k:"moon"},
-      {t:"确认一切仍在掌控中", k:"sun"},
-      {t:"找人倾诉、抱抱", k:"seed"},
-      {t:"停不下来地刷手机", k:"star"},
-    ]},
-  { q:"你内在最想被看见的部分是？", hint:"那个真实的你。",
-    options:[
-      {t:"脆弱而真实的自己", k:"moon"},
-      {t:"其实也会害怕、会不够好", k:"sun"},
-      {t:"温柔而善感的自己", k:"seed"},
-      {t:"其实很累、绷得很紧", k:"star"},
+      {t:"冰晶鑰匙", k:"moon"},
+      {t:"礦石鑰匙", k:"sun"},
+      {t:"玉石鑰匙", k:"seed"},
+      {t:"絲絨鑰匙", k:"star"},
     ]},
 ];
 
@@ -539,8 +536,7 @@ const STATE_KEY = "annova_state_v2";
 /* ======================================== */
 
 const screens = {
-  cover: document.getElementById('cover'),
-  intro: document.getElementById('intro'),
+  homepage: document.getElementById('homepage'),
   quiz: document.getElementById('quiz'),
   loading: document.getElementById('loading'),
   result: document.getElementById('result'),
@@ -554,12 +550,12 @@ function show(name){
 function saveState(o){ try{ localStorage.setItem(STATE_KEY, JSON.stringify(o)); }catch(e){} }
 function loadState(){ try{ return JSON.parse(localStorage.getItem(STATE_KEY)||'null'); }catch(e){ return null; } }
 function persist(){
-  const cur = ['cover','intro','quiz','loading','result'].find(k=>screens[k] && screens[k].classList.contains('active')) || 'cover';
+  const cur = ['homepage','quiz','loading','result'].find(k=>screens[k] && screens[k].classList.contains('active')) || 'homepage';
   saveState({screen:cur, step:step, scores:{moon:scores.moon,sun:scores.sun,seed:scores.seed,star:scores.star}, key:currentKey});
 }
 function restore(){
   const st = loadState();
-  if(!st){ show('cover'); return; }
+  if(!st){ show('homepage'); return; }
   if(st.scores){ scores.moon=st.scores.moon||0; scores.sun=st.scores.sun||0; scores.seed=st.scores.seed||0; scores.star=st.scores.star||0; }
   if(typeof st.step==='number') step = Math.max(0, st.step);
   if(st.key) currentKey = st.key;
@@ -567,8 +563,7 @@ function restore(){
     show('result'); showResult(RESULTS[st.key], st.key);
   } else if(st.screen==='quiz' && step < QUESTIONS.length){
     renderQuestion(); show('quiz');
-  } else if(st.screen==='intro'){ show('intro'); }
-  else { show('cover'); }
+  } else { show('homepage'); }
 }
 
 let step = 0;
@@ -661,7 +656,6 @@ function toastMsg(m){
   clearTimeout(toast._t); toast._t=setTimeout(()=>toast.classList.remove('show'),1800);
 }
 
-document.getElementById('startBtn').onclick=()=>show('intro');
 document.getElementById('exploreBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
 document.getElementById('againBtn').onclick=()=>{ step=0; Object.keys(scores).forEach(k=>scores[k]=0); renderQuestion(); show('quiz'); };
 document.getElementById('shareBtn').onclick=()=>{
