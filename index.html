@@ -50,10 +50,10 @@
     position:relative;z-index:1;
     height:100%;
     display:flex;align-items:center;justify-content:center;
-    padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));
+    padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
   }
   .stage{
-    width:100%;max-width:480px;height:100%;max-height:860px;
+    width:100%;max-width:480px;height:100%;max-height:100%;
     position:relative;
   }
   .screen{
@@ -201,12 +201,18 @@
     margin-bottom:12px;text-transform:uppercase;
   }
   .res-img{
-    width:100%;max-width:420px;height:auto;display:block;border-radius:16px;
+    width:100%;max-width:420px;height:auto;display:block;margin:0 auto;border-radius:16px;
     box-shadow:0 10px 40px rgba(0,0,0,.4);
   }
   .res-actions{display:flex;flex-direction:column;gap:11px;margin:4px 0 18px;}
   .res-actions .row{display:flex;gap:11px;}
   .res-actions .row .btn{flex:1;}
+  .btn-wechat{
+    width:100%;text-align:center;text-decoration:none;
+    background:linear-gradient(135deg,#3ec46d,#1aad5b);
+    color:#fff;border:none;
+  }
+  .btn-wechat:active{transform:scale(.98);}
   .brand-foot-dark{
     font-size:11px;letter-spacing:.2em;color:rgba(200,210,230,.5);
     text-align:center;margin-top:6px;padding-bottom:12px;
@@ -294,6 +300,7 @@
           <button class="btn" id="shareBtn">复制我的频率</button>
           <button class="btn btn-ghost" id="againBtn">重新测试</button>
         </div>
+        <a class="btn btn-wechat" id="wechatBtn" href="#" target="_blank" rel="noopener">加入 Annova 疗愈社群 ⟶</a>
       </div>
       <div class="brand-foot brand-foot-dark">由 <b>Annova</b> 为你呈献 · annova.com.tw</div>
     </section>
@@ -404,6 +411,7 @@ const RESULTS = {
 
 const BRAND = "Annova";          // 底部品牌名
 const SHARE_SUFFIX = " · 来做我的同款情绪频率测试 →"; // 分享后缀
+const WECHAT_GROUP_URL = "在此粘贴你的微信群邀请链接"; // ← 换成你的微信群链接（如 https://u.wechat.com/xxxx ）
 /* ======================================== */
 
 const screens = {
@@ -497,6 +505,7 @@ function showResult(r, key){
   img.src = r.img;
   img.alt = r.name + ' · ' + r.en;
   document.querySelector('.brand-foot-dark').innerHTML = "由 <b>"+BRAND+"</b> 为你呈献 · annova.com.tw";
+  document.getElementById('wechatBtn').href = WECHAT_GROUP_URL;
   show('result');
 }
 
